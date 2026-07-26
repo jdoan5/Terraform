@@ -22,8 +22,8 @@ crash.*.log
 *.tfvars
 *.tfvars.json
 
-# This learning project's tfvars contain no secrets — keep them in git.
-!Calculator/*.tfvars
+# These learning projects' tfvars contain no secrets — keep them in git.
+!Project */**/*.tfvars
 
 # Ignore override files as they are usually used to override resources locally and so
 # are not checked in

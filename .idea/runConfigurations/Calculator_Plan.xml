@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Calculator Plan" type="TerraformConfigurationType" factoryName="Terraform plan">
+    <option name="commandType" value="PLAN" />
+    <option name="directory" value="$PROJECT_DIR$/Project 1/Calculator" />
+    <option name="workingDirectory" value="$PROJECT_DIR$/Project 1/Calculator" />
+    <envs />
+    <method v="2" />
+  </configuration>
+</component>

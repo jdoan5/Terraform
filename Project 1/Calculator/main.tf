@@ -31,5 +31,5 @@ locals {
 # Division here is REAL division: 12 / 4 = 3, but 5 / 2 = 2.5 — there is no
 # integer division operator (floor(a / b) arrives in Stage 2).
 #
-# Poke at this file interactively:  cd Calculator && ../tools/terraform console
+# Poke at this file interactively:  cd "Project 1/Calculator" && ../../tools/terraform console
 # then try:  local.results        local.results["multiply"]        var.a + var.b

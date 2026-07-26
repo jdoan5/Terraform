@@ -18,11 +18,16 @@ concepts, every stage is runnable end-to-end, and this table tracks progress.
 
 ## One-time IntelliJ setup
 
+Already done on this machine (plugin installed, executable path configured, run
+configurations created) — restart IntelliJ once and everything appears. For a fresh
+machine, the checklist is:
+
 1. **Open the repo root** — `/Users/jdoan/Documents/GitHub/Terraform` — as the IntelliJ
-   project (not `Calculator/`). Future stages and projects live side by side.
-2. Point the bundled **Terraform and HCL** plugin at the repo-local binary:
-   **Settings → search "terraform" → Tools → Terraform and OpenTofu →**
-   set the executable path to
+   project (not `Project 1/Calculator/`). All projects live side by side.
+2. Install the **Terraform and HCL** plugin (Settings → Plugins → Marketplace — it is
+   *not* bundled with IDEA) and restart the IDE.
+3. Point it at the repo-local binary: **Settings → search "terraform" → Tools →
+   Terraform and OpenTofu →** set the executable path to
    `/Users/jdoan/Documents/GitHub/Terraform/tools/terraform`
    and confirm it detects **Terraform v1.15.7**.
 
@@ -34,21 +39,23 @@ concepts, every stage is runnable end-to-end, and this table tracks progress.
 ## How to run
 
 **Run configurations (the terminal replacement):**
-Run → Edit Configurations → **+** → Terraform → create one each for
-**Init / Validate / Plan / Apply** (Destroy joins in Stage 4).
+Ready-made configs are checked in under `.idea/runConfigurations/` — pick
+**Calculator Init / Validate / Plan / Apply** from the dropdown next to the Run ▶
+button (Destroy joins in Stage 4). To create one by hand:
+Run → Edit Configurations → **+** → Terraform.
 
-- **Working directory** = `.../Terraform/Calculator` — this is the #1 trap:
+- **Working directory** = `.../Terraform/Project 1/Calculator` — this is the #1 trap:
   Terraform operates on the working directory. Pointed at the repo root, Plan
   fails with "no configuration files".
-- Tick **Store as project file** so the configs survive restarts.
+- Tick **Store as project file** so hand-made configs land in `.idea/runConfigurations/`.
 - Shortcut: the gutter icon next to the `terraform {}` block in `versions.tf` runs init.
 
-**Terminal fallback** (and how `console` runs) — always from `Calculator/`:
+**Terminal fallback** (and how `console` runs) — always from `Project 1/Calculator/`:
 
 ```
-cd Calculator
-../tools/terraform init
-../tools/terraform apply
+cd "Project 1/Calculator"
+../../tools/terraform init
+../../tools/terraform apply
 ```
 
 **The everyday loop:** edit `.tf` / `.tfvars` → reformat with **Opt+Cmd+L** (matches
@@ -85,8 +92,8 @@ run config's *Program arguments* (or run in the terminal):
 ## terraform console — the expression playground
 
 ```
-cd Calculator
-../tools/terraform console
+cd "Project 1/Calculator"
+../../tools/terraform console
 ```
 
 Try: `local.results` · `local.results["multiply"]` · `var.a + var.b` — then `q` to quit.
@@ -103,15 +110,15 @@ Console auto-loads `terraform.tfvars` and needs the folder init'ed once.
 
 ## Git notes
 
-- The stock `.gitignore` ignores `*.tfvars` (they often hold secrets). This project's
-  tfvars are lesson content, so the root `.gitignore` negates it: `!Calculator/*.tfvars`.
+- The stock `.gitignore` ignores `*.tfvars` (they often hold secrets). These projects'
+  tfvars are lesson content, so the root `.gitignore` negates it: `!Project */**/*.tfvars`.
 - Commit `.terraform.lock.hcl` when Stage 4 creates it.
-- Never commit `.terraform/`, `*.tfstate`, or (later) `Calculator/out/`.
+- Never commit `.terraform/`, `*.tfstate`, or (later) the generated `out/` folder.
 
 ## Troubleshooting
 
 | Symptom | Cause |
 |---|---|
-| `No configuration files` | Run config's working directory points at the repo root, not `Calculator/` |
+| `No configuration files` | Run config's working directory points at the repo root, not `Project 1/Calculator/` |
 | Outputs look stale after editing tfvars | Outputs live in **state** — run Apply again |
 | Apply seems to hang | It's waiting for you to type `yes` in the Run console |

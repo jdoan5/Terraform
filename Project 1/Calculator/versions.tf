@@ -4,7 +4,7 @@
 
 terraform {
   # "~> 1.15.0" is the PESSIMISTIC version constraint: any 1.15.x, never 1.16.
-  # We pin to the binary we actually run (../tools/terraform = 1.15.7).
+  # We pin to the binary we actually run (../../tools/terraform = 1.15.7).
   required_version = "~> 1.15.0"
 
   # Note what is MISSING here: no required_providers, no credentials.
