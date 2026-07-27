@@ -8,8 +8,8 @@
 # IDE trick: on a blank line, type a few letters and IntelliJ completes
 # variable names straight from variables.tf (Ctrl+Space to force it).
 
-a         = 12
-b         = 4
+a         = 15
+b         = 5
 operation = "divide" # add | subtract | multiply | divide
 
 # Numbers stay UNQUOTED: b = "4" would be a string Terraform quietly
