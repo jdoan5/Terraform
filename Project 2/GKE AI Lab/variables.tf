@@ -14,3 +14,9 @@ variable "image_tag" {
   type        = string
   default     = "v1"
 }
+
+variable "vertex_location" {
+  description = "Vertex AI location for Gemini calls. 'global' is where the Gemini-3 family is served; regional pins can 404."
+  type        = string
+  default     = "global"
+}

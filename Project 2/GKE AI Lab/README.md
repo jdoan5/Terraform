@@ -22,9 +22,8 @@ and `docker`.
 1. Create a **new project** (e.g. `gke-lab`) — console → project picker → New project.
 2. **Link billing** to it (Billing → Account management → link project).
 3. Create the Terraform identity: IAM & Admin → Service Accounts →
-   **Create service account** `terraform-admin` → grant role **Editor** plus
-   **Kubernetes Engine Admin**, **Artifact Registry Admin**,
-   **Service Account Admin**, **Project IAM Admin** → Done →
+   **Create service account** `terraform-admin` → grant roles **Editor**,
+   **Service Account Admin**, and **Project IAM Admin** → Done →
    Keys tab → **Add key → JSON** → the file downloads.
 4. Move the key **outside every git repo**, e.g. `~/keys/gke-lab-terraform.json`.
 
@@ -39,7 +38,7 @@ export REGION=us-central1
 docker build --platform linux/amd64 -t $REGION-docker.pkg.dev/$PROJECT_ID/ai-lab/agent:v1 .
 
 # Registry must exist first (created by Terraform):
-cd "~/Documents/GitHub/Terraform/Project 2/GKE AI Lab"
+cd "$HOME/Documents/GitHub/Terraform/Project 2/GKE AI Lab"
 export GOOGLE_APPLICATION_CREDENTIALS=~/keys/gke-lab-terraform.json
 ../../tools/terraform init
 ../../tools/terraform apply -target=google_artifact_registry_repository.ai_lab -var project_id=$PROJECT_ID
@@ -67,6 +66,9 @@ curl -N -X POST http://$IP/api/agent -H 'content-type: application/json' \
   -d '{"agent":"reviews","message":"How many apps do I have?"}'
 ```
 
+IAM propagation can take up to ~1 minute after apply — if the first agent call
+403s, wait and retry.
+
 `"auth":"adc"` is the proof of the whole exercise: Gemini answering with **no
 API key in the container, the manifests, or the Terraform**.
 
@@ -77,11 +79,22 @@ Service with its external IP, IAM → the `ai-lab-runtime` SA, Artifact Registry
 
 ```bash
 ../../tools/terraform destroy -var project_id=$PROJECT_ID
+
+# The docker login in step 1 stored the ENTIRE key JSON as the registry
+# password — clean both the credential store and the key itself:
+docker logout https://$REGION-docker.pkg.dev
+rm ~/keys/gke-lab-terraform.json
+unset GOOGLE_APPLICATION_CREDENTIALS
 ```
 
 Then belt-and-suspenders: console → IAM & Admin → Settings → **Shut down
 project** (deletes anything a destroy could have missed, including the
 `terraform-admin` key's power — the billing meter for this project ends here).
+
+> **If the project/cluster was deleted before `terraform destroy`** (e.g. you
+> shut the project down first), a later plan/destroy will hang refreshing the
+> four `kubernetes_*` resources against the dead endpoint. Recover with:
+> `terraform state rm $(terraform state list | grep kubernetes_)`
 
 ## Files
 

@@ -56,4 +56,9 @@ resource "google_service_account_iam_member" "workload_identity" {
   service_account_id = google_service_account.runtime.name
   role               = "roles/iam.workloadIdentityUser"
   member             = "serviceAccount:${var.project_id}.svc.id.goog[ai-lab/agent]"
+
+  # The PROJECT.svc.id.goog identity pool only exists once the first
+  # WI-enabled cluster is created — without this, a fresh-project apply
+  # fails with "Identity Pool does not exist".
+  depends_on = [google_container_cluster.ai_lab]
 }

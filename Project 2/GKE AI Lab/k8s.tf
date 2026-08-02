@@ -57,7 +57,7 @@ resource "kubernetes_deployment_v1" "agent" {
           }
           env {
             name  = "GOOGLE_CLOUD_LOCATION"
-            value = var.region
+            value = var.vertex_location
           }
 
           resources {
