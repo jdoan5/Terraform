@@ -26,6 +26,12 @@ and `docker`.
    **Service Account Admin**, and **Project IAM Admin** → Done →
    Keys tab → **Add key → JSON** → the file downloads.
 4. Move the key **outside every git repo**, e.g. `~/keys/gke-lab-terraform.json`.
+5. **Enable the Cloud Resource Manager API** — the bootstrap API Terraform needs
+   before it can enable any others (without it the first apply fails with
+   *"Cloud Resource Manager API has not been used in project ... before"*):
+   console → APIs & Services → Library → search **Cloud Resource Manager API**
+   → **Enable**. Direct link:
+   `https://console.cloud.google.com/apis/library/cloudresourcemanager.googleapis.com?project=<PROJECT_ID>`
 
 ## 1. Build & push the image (from `Angular/ai-lab`)
 

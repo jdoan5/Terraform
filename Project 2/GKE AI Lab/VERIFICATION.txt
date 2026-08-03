@@ -1,0 +1,16 @@
+# Verification — GKE AI Lab (keyless Vertex AI via Workload Identity)
+# Captured 2026-08-03 01:15 UTC · cluster ai-lab (Autopilot, us-central1) · project gke-lab-504304
+
+$ curl http://<LB>/healthz
+{"ok":true}
+
+$ curl http://<LB>/api/agent
+{"ok":true,"hasKey":true,"auth":"adc"}
+#   ^ auth=adc  → no API key in the container, manifests, or Terraform
+
+$ curl -N -X POST http://<LB>/api/agent -d '{"agent":"reviews","message":"How many apps do I have?"}'
+{"type":"tool-start","tool":"list_my_apps","args":{}}
+{"type":"tool-end","tool":"list_my_apps","summary":"12 apps found"}
+{"type":"delta","text":"You have 12 published apps on the App"}
+{"type":"delta","text":" Store."}
+{"type":"done","model":"gemini-3.5-flash"}
